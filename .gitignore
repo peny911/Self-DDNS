@@ -6,3 +6,4 @@ appsettings.*.json
 *.user
 .vs/
 .idea/
+.DS_Store
