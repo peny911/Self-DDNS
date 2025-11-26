@@ -29,26 +29,26 @@
 #### 构建镜像
 
 ```bash
-docker build -t ddns .
+docker build -t self-ddns .
 ```
 
 #### 运行容器
 
 ```bash
 docker run -d \
-  --name ddns \
+  --name self-ddns \
   --restart=always \
   -e ALIYUN_ACCESS_KEY_ID="你的AccessKeyId" \
   -e ALIYUN_ACCESS_KEY_SECRET="你的AccessKeySecret" \
   -e DNS_DOMAIN="mydomain.com" \
   -e DNS_SUBDOMAIN="home" \
-  ddns
+  self-ddns
 ```
 
 #### 查看日志
 
 ```bash
-docker logs -f ddns
+docker logs -f self-ddns
 ```
 
 ### 方式二：群晖 Docker 部署
@@ -58,27 +58,29 @@ docker logs -f ddns
 将项目文件上传到群晖，通过 SSH 执行：
 
 ```bash
-cd /volume1/docker/ddns
-docker build -t ddns .
+cd /volume1/docker/self-ddns
+docker build -t self-ddns .
 ```
 
 或者在本地构建后导出：
 
 ```bash
-# 本地构建
-docker build -t ddns .
+# 本地构建（Apple Silicon Mac 需指定平台为 amd64）
+docker build --platform linux/amd64 -t self-ddns .
 
 # 导出镜像
-docker save ddns -o ddns.tar
+docker save self-ddns -o self-ddns.tar
 
-# 上传 ddns.tar 到群晖，然后导入
-docker load -i ddns.tar
+# 上传 self-ddns.tar 到群晖，然后导入
+docker load -i self-ddns.tar
 ```
+
+> **注意**：如果在 Apple Silicon Mac (M1/M2/M3) 上构建，必须添加 `--platform linux/amd64` 参数，否则镜像无法在 x86_64 架构的群晖 NAS 上运行（会报 `exec format error` 错误）。
 
 #### 步骤 2：通过群晖 Docker 界面创建容器
 
 1. 打开「Container Manager」（或 Docker 套件）
-2. 选择「ddns」镜像，点击「启动」
+2. 选择「self-ddns」镜像，点击「启动」
 3. 配置环境变量：
 
 | 变量名 | 值 |
@@ -107,7 +109,7 @@ export ALIYUN_ACCESS_KEY_SECRET="你的AccessKeySecret"
 export DNS_DOMAIN="mydomain.com"
 export DNS_SUBDOMAIN="home"
 
-./publish/ddns
+./publish/self-ddns
 ```
 
 ## 配置说明
@@ -146,7 +148,7 @@ export DNS_SUBDOMAIN="home"
 1. 查看容器日志，确认服务正常启动：
 
 ```bash
-docker logs ddns
+docker logs self-ddns
 ```
 
 正常输出示例：

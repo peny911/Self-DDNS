@@ -3,9 +3,9 @@ WORKDIR /src
 COPY ["Self-DDNS.csproj", "."]
 RUN dotnet restore
 COPY . .
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish Self-DDNS.csproj -c Release -o /app/publish -p:PublishSingleFile=false -p:SelfContained=false
 
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
 
