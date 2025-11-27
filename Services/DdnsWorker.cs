@@ -61,8 +61,6 @@ public class DdnsWorker : BackgroundService
 
         if (currentIp == _lastKnownIp)
         {
-            _logger.LogInformation("通过 {Provider} 查询，当前 IP: {Ip}，DNS 记录一致，无需更新",
-                result.Provider, currentIp);
             return;
         }
 
