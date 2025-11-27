@@ -8,3 +8,4 @@ appsettings.*.json
 .idea/
 .DS_Store
 .claude/
+CLAUDE.md
