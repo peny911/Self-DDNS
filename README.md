@@ -38,12 +38,15 @@ docker build -t self-ddns .
 docker run -d \
   --name self-ddns \
   --restart=always \
+  -e TZ=Asia/Shanghai \
   -e ALIYUN_ACCESS_KEY_ID="你的AccessKeyId" \
   -e ALIYUN_ACCESS_KEY_SECRET="你的AccessKeySecret" \
   -e DNS_DOMAIN="mydomain.com" \
   -e DNS_SUBDOMAIN="home" \
   self-ddns
 ```
+
+> **提示**：`TZ=Asia/Shanghai` 用于设置容器时区，确保日志时间与本地时间一致。
 
 #### 查看日志
 
@@ -85,6 +88,7 @@ docker load -i self-ddns.tar
 
 | 变量名 | 值 |
 |--------|-----|
+| TZ | Asia/Shanghai |
 | ALIYUN_ACCESS_KEY_ID | 你的 AccessKey ID |
 | ALIYUN_ACCESS_KEY_SECRET | 你的 AccessKey Secret |
 | DNS_DOMAIN | mydomain.com |
@@ -118,6 +122,7 @@ export DNS_SUBDOMAIN="home"
 
 | 变量名 | 必填 | 说明 |
 |--------|------|------|
+| TZ | 否 | 时区，如 `Asia/Shanghai`，默认已设置 |
 | ALIYUN_ACCESS_KEY_ID | 是 | 阿里云 AccessKey ID |
 | ALIYUN_ACCESS_KEY_SECRET | 是 | 阿里云 AccessKey Secret |
 | DNS_DOMAIN | 是 | 主域名，如 `mydomain.com` |
