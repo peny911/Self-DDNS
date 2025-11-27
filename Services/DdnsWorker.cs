@@ -22,6 +22,8 @@ public class DdnsWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        PrintWelcomeBanner();
+
         _logger.LogInformation("DDNS 服务已启动，监控域名: {SubDomain}.{Domain}，检查间隔: {Interval} 秒",
             _config.SubDomain, _config.Domain, _config.CheckIntervalSeconds);
 
@@ -72,5 +74,10 @@ public class DdnsWorker : BackgroundService
         {
             _lastKnownIp = currentIp;
         }
+    }
+
+    private void PrintWelcomeBanner()
+    {
+        Console.WriteLine($"Self-DDNS Started at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
     }
 }

@@ -2,6 +2,14 @@ using SelfDdns.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+// 配置日志格式为单行
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.SingleLine = true;
+    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+    options.UseUtcTimestamp = false;
+});
+
 // 从配置文件或环境变量读取配置（环境变量优先）
 var dnsConfig = new DnsConfig
 {
