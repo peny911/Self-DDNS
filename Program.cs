@@ -20,6 +20,17 @@ var dnsConfig = new DnsConfig
     CheckIntervalSeconds = int.TryParse(builder.Configuration["Dns:CheckIntervalSeconds"], out var interval) ? interval : 60
 };
 
+var ipDetectionConfig = new IpDetectionConfig
+{
+    Providers = builder.Configuration
+        .GetSection("IpDetection:Providers")
+        .GetChildren()
+        .Select(section => section.Value)
+        .Where(value => !string.IsNullOrWhiteSpace(value))
+        .Cast<string>()
+        .ToArray()
+};
+
 string GetConfig(string envVar, string configKey)
 {
     var envValue = Environment.GetEnvironmentVariable(envVar);
@@ -44,8 +55,15 @@ if (string.IsNullOrEmpty(dnsConfig.Domain) || string.IsNullOrEmpty(dnsConfig.Sub
     return 1;
 }
 
+if (ipDetectionConfig.Providers.Count == 0)
+{
+    Console.WriteLine("错误: 请在 appsettings.json 的 IpDetection:Providers 中配置至少一个 IP 检测网址");
+    return 1;
+}
+
 // 注册服务
 builder.Services.AddSingleton(dnsConfig);
+builder.Services.AddSingleton(ipDetectionConfig);
 builder.Services.AddHttpClient<IIpService, IpService>();
 builder.Services.AddSingleton<IAliyunDnsService, AliyunDnsService>();
 builder.Services.AddHostedService<DdnsWorker>();

@@ -142,11 +142,18 @@ export DNS_SUBDOMAIN="home"
     "Domain": "mydomain.com",
     "SubDomain": "home",
     "CheckIntervalSeconds": 60
+  },
+  "IpDetection": {
+    "Providers": [
+      "https://api.ipify.org"
+    ]
   }
 }
 ```
 
 > 环境变量优先级高于配置文件
+>
+> IP 检测网址按 `IpDetection.Providers` 中的顺序依次请求，获取到第一个有效 IPv4 后停止尝试后续网址。修改容器内的配置需要重启服务才会生效。
 
 ## 验证部署
 

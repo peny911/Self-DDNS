@@ -2,6 +2,11 @@ namespace SelfDdns.Services;
 
 public record IpResult(string Ip, string Provider);
 
+public class IpDetectionConfig
+{
+    public IReadOnlyList<string> Providers { get; init; } = [];
+}
+
 public interface IIpService
 {
     Task<IpResult?> GetPublicIpAsync(CancellationToken cancellationToken = default);
@@ -11,26 +16,22 @@ public class IpService : IIpService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<IpService> _logger;
+    private readonly IReadOnlyList<string> _providers;
 
-    // 优先使用国内服务，避免 VPN 分流问题
-    private static readonly string[] IpProviders =
-    [
-        "https://myip.ipip.net",
-        "https://ip.3322.net",
-        "https://www.3322.org/dyndns/getip",
-        "https://api.ipify.org"
-    ];
-
-    public IpService(HttpClient httpClient, ILogger<IpService> logger)
+    public IpService(
+        HttpClient httpClient,
+        IpDetectionConfig config,
+        ILogger<IpService> logger)
     {
         _httpClient = httpClient;
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
+        _providers = config.Providers;
         _logger = logger;
     }
 
     public async Task<IpResult?> GetPublicIpAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var provider in IpProviders)
+        foreach (var provider in _providers)
         {
             try
             {
